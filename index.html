@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="es" class="h-full antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard StartCo 2026 - Pantalla Gigante</title>
+
+    <!-- Tailwind CSS v4 (CDN) -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- p5.js (instance mode para fondo de dots) -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+    <!-- Google Fonts: Geist Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Escalado pantalla gigante: base en viewport, todo en rem escala */
+      :root {
+        font-size: 1vw;
+        font-family: "Geist Mono", monospace;
+        --bg-dark: #1a1a1a;
+        --bg-light: #f0f0f0;
+        --teal: #00f0c0;
+        --teal-dark: #00c9a0;
+      }
+
+      body {
+        background: var(--bg-dark);
+      }
+
+      /* Contenedor widescreen 4:1: ocupa lo que quepa manteniendo proporción */
+      .widescreen {
+        aspect-ratio: 3 / 1;
+        width: min(100vw, 400vh);
+        height: auto;
+        display: grid;
+        grid-template-columns: 15fr 40fr 22fr 23fr;
+        overflow: hidden;
+      }
+
+      /* Columnas con tamaño estable y contenido que escala */
+      .widescreen > section {
+        min-width: 0;
+        min-height: 0;
+      }
+
+      /* SVG decorativo: escala dentro de la columna sin desbordar */
+      .widescreen .section-deco svg {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      /* Animación sutil en SVG decorativo (loop infinito) */
+      .deco-svg .line-draw {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: deco-draw 5s ease-in-out infinite;
+      }
+      .deco-svg .line-draw-delay {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: deco-draw 5s ease-in-out 0.5s infinite;
+      }
+      .deco-svg .line-dash-march {
+        animation: deco-dash-march 3s linear infinite;
+      }
+      @keyframes deco-draw {
+        0%,
+        100% {
+          stroke-dashoffset: 1;
+        }
+        45%,
+        55% {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes deco-dash-march {
+        to {
+          stroke-dashoffset: -13.3;
+        }
+      }
+
+      /* Efecto pantalla aeropuerto: letras flip al aparecer */
+      .flip-chars {
+        perspective: 300px;
+        display: inline-flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        white-space: pre;
+      }
+      .flip-char {
+        display: inline-block;
+        transform-origin: center bottom;
+        backface-visibility: hidden;
+      }
+      .flip-char-enter {
+        animation: flip-char-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      @keyframes flip-char-in {
+        from {
+          opacity: 0;
+          transform: rotateX(-85deg) scaleY(0.3);
+        }
+        to {
+          opacity: 1;
+          transform: rotateX(0) scaleY(1);
+        }
+      }
+
+      /* Entrada del bloque: translate-y desde abajo (delay por índice) */
+      .ranking-item-enter {
+        animation: ranking-enter 0.6s ease-out both;
+      }
+      @keyframes ranking-enter {
+        from {
+          opacity: 0;
+          transform: translateY(10%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Efecto breath en textos de asistentes (solo scale) */
+      .text-breath {
+        animation: text-breath 3s ease-in-out infinite;
+      }
+      @keyframes text-breath {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      /* Scrollbar opcional */
+      ::-webkit-scrollbar {
+        width: 0.5rem;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-dark);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 0.25rem;
+      }
+    </style>
+  </head>
+  <body
+    class="h-screen w-screen overflow-hidden flex items-center justify-center"
+  >
+    <div
+      class="widescreen"
+      x-init="$store.dashboard.init()"
+      :style="{ aspectRatio: $store.dashboard.aspectRatio }"
+    >
+      <!-- Col 1: Decorativa (15fr) -->
+      <section
+        class="section-deco flex flex-col items-center justify-center p-0 text-black"
+        style="background: var(--bg-light)"
+      >
+        <svg
+          class="deco-svg flex-1 min-h-0 w-full h-full max-w-full max-h-full"
+          viewBox="0 0 360 810"
+          preserveAspectRatio="xMidYMid meet"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M360 807.725H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 792.643H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 777.562H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 762.481H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 747.4H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 732.329H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 717.247H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 702.166H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 687.085H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 672.004H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 656.933H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 641.851H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 626.77H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 611.689H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 596.608H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M360 581.537H332.509"
+            stroke="black"
+            stroke-width="2"
+            stroke-miterlimit="10"
+          />
+          <path
+            class="line-draw"
+            pathLength="1"
+            d="M349.244 568.386L35.7195 65.8053"
+            stroke="black"
+            stroke-miterlimit="10"
+          />
+          <path
+            class="line-dash-march"
+            d="M349.244 568.386L0 276.502"
+            stroke="black"
+            stroke-miterlimit="10"
+            stroke-dasharray="6.65 6.65"
+          />
+          <path
+            class="line-draw-delay"
+            pathLength="1"
+            d="M49 808L349 0"
+            stroke="black"
+            stroke-miterlimit="10"
+          />
+          <path
+            d="M227.302 355.698H215.355V367.329H227.302V355.698Z"
+            fill="black"
+          />
+          <path d="M145.25 507.66H133.62V519.29H145.25V507.66Z" fill="black" />
+        </svg>
+      </section>
+
+      <!-- Col 2: Inversión + gráfica (40fr). Título y valor compactos; chart ocupa más altura -->
+      <section
+        class="flex flex-col pt-[1rem] text-white min-h-0 overflow-hidden"
+        style="background: var(--bg-dark)"
+      >
+        <h2
+          class="text-[1.6rem] font-bold uppercase tracking-wide mb-[0.2rem] shrink-0 px-[2rem]"
+          style="color: var(--teal)"
+        >
+          Inversión
+        </h2>
+        <p
+          class="text-[2.6rem] font-bold tabular-nums leading-none mb-[0.4rem] shrink-0 px-[2rem]"
+          style="color: var(--teal); min-height: 1.2em"
+          x-data="{ displayInvestment: 0 }"
+          x-init="
+            $watch('$store.dashboard.investmentTotal', (end) => {
+              const start = displayInvestment;
+              const duration = 800;
+              let startTime = null;
+              const step = (now) => {
+                if (!startTime) startTime = now;
+                const t = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - t, 2);
+                displayInvestment = Math.floor(start + (end - start) * eased);
+                if (t < 1) requestAnimationFrame(step);
+              };
+              requestAnimationFrame(step);
+            });
+          "
+          x-text="$store.dashboard.formatCurrency(displayInvestment)"
+        >
+          $0
+        </p>
+        <div
+          id="chart"
+          class="flex-1 min-h-0 w-full min-w-0 overflow-hidden flex flex-col items-stretch"
+          style="min-width: 0"
+          x-init="$nextTick(() => $store.dashboard.initChart($el))"
+        ></div>
+      </section>
+
+      <!-- Col 3: Lista startups (25fr) -->
+      <section
+        class="flex flex-col text-black min-h-0"
+        style="background: var(--bg-light)"
+      >
+        <div class="flex-1 min-h-0 p-[1rem] flex flex-col overflow-hidden">
+          <div class="flex flex-col flex-1 min-h-0 divide-y divide-black/20">
+            <template
+              x-for="(item, i) in $store.dashboard.currentPageItems"
+              :key="item.rank + '-' + $store.dashboard.currentPage"
+            >
+              <div
+                class="flex-[1_1_0] min-h-0 flex flex-row items-start gap-[0.5rem] py-[0.35rem] overflow-hidden justify-between"
+                :class="{ 'ranking-item-enter': $store.dashboard._rankingInitialized }"
+                :style="$store.dashboard._rankingInitialized ? { 'animation-delay': (i * 120) + 'ms' } : {}"
+              >
+                <span
+                  class="shrink-0 font-medium text-[2.2rem] leading-[1.25] text-[#2a2a2a] tabular-nums"
+                  style="font-feature-settings: &quot;zero&quot;"
+                  x-text="$store.dashboard.rankLabel(item, i)"
+                ></span>
+                <div
+                  class="text-right flex-1 min-w-0 flex flex-col items-end justify-end gap-[0.2rem]"
+                >
+                  <span
+                    class="text-[1.6rem] leading-[1.35] text-[#2a2a2a] text-right line-clamp-2 flip-chars"
+                  >
+                    <template
+                      x-for="(char, ci) in (item.name || '').split('')"
+                      :key="ci"
+                    >
+                      <span
+                        class="flip-char"
+                        :class="{ 'flip-char-enter': $store.dashboard._rankingInitialized }"
+                        :style="$store.dashboard._rankingInitialized ? { 'animation-delay': (ci * 80) + 'ms' } : {}"
+                        x-text="char === ' ' ? '\u00A0' : char"
+                      ></span>
+                    </template>
+                  </span>
+                  <div
+                    class="inline-block"
+                    x-data="{ displayScore: 0 }"
+                    x-init="
+                      const end = item.score;
+                      const duration = 700;
+                      let startTime = null;
+                      const step = (now) => {
+                        if (!startTime) startTime = now;
+                        const t = Math.min((now - startTime) / duration, 1);
+                        const eased = 1 - Math.pow(1 - t, 2);
+                        displayScore = Math.floor(eased * end);
+                        if (t < 1) requestAnimationFrame(step);
+                      };
+                      $nextTick(() => requestAnimationFrame(step));
+                    "
+                  >
+                    <span
+                      class="inline-block bg-black font-semibold text-[1.7rem] leading-[1.3] text-[var(--teal)] px-[0.6rem] py-[0.25rem] rounded w-fit tabular-nums"
+                      x-text="$store.dashboard.formatCurrency(displayScore)"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="h-[0.4rem] min-h-[2px] w-full bg-black/10 flex-shrink-0">
+          <div
+            class="h-full transition-all duration-100 ease-linear"
+            style="background: var(--teal)"
+            :style="{ width: $store.dashboard.progress + '%' }"
+          ></div>
+        </div>
+      </section>
+
+      <!-- Col 4: Número asistentes (25fr) — fondo dots subiendo (p5.js) -->
+      <section
+        class="relative flex flex-col items-center justify-center p-[1.5rem] text-center min-h-0 overflow-hidden"
+        style="background: var(--teal)"
+      >
+        <div
+          id="attendees-dots-bg"
+          class="absolute inset-0 z-0 overflow-hidden"
+          style="position: absolute"
+          aria-hidden="true"
+        ></div>
+        <div class="relative z-10 text-breath">
+          <span
+            class="text-[clamp(2rem,6vw,5rem)] leading-none font-bold tabular-nums text-[var(--bg-dark)]"
+            x-data="{ displayVisitors: 0 }"
+            x-init="
+              $watch('$store.dashboard.visitors', (end) => {
+                const start = displayVisitors;
+                const duration = 800;
+                let startTime = null;
+                const step = (now) => {
+                  if (!startTime) startTime = now;
+                  const t = Math.min((now - startTime) / duration, 1);
+                  const eased = 1 - Math.pow(1 - t, 2);
+                  displayVisitors = Math.floor(start + (end - start) * eased);
+                  if (t < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+              });
+            "
+            x-text="$store.dashboard.formatVisitors(displayVisitors)"
+            >0</span
+          >
+          <span
+            class="text-[clamp(0.6rem,1.2vw,1.2rem)] font-semibold uppercase tracking-widest mt-[0.5rem] text-[var(--bg-dark)] block"
+            >Número de asistentes</span
+          >
+        </div>
+      </section>
+    </div>
+    <script src="app.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"
+    ></script>
+    <script src="attendees-dots.js"></script>
+  </body>
+</html>

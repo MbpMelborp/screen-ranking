@@ -1,0 +1,55 @@
+{
+  "visitors": 18200,
+  "last_update": "2024-05-20T10:30:00Z",
+  "investment_chart": {
+    "labels": ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00"],
+    "series": [
+      {
+        "name": "Inversión por hora",
+        "type": "column",
+        "data": [
+          6000000, 14000000, 10000000, 18000000, 24000000, 22000000, 30000000
+        ]
+      },
+      {
+        "name": "Acumulado Total",
+        "type": "line",
+        "data": [
+          6000000, 20000000, 30000000, 48000000, 72000000, 94000000, 124000000
+        ]
+      }
+    ]
+  },
+  "ranking": [
+    { "rank": 1, "name": "EcoSolutions", "score": 10450000, "trend": "up" },
+    { "rank": 2, "name": "FinTech Now", "score": 10320000, "trend": "same" },
+    { "rank": 3, "name": "HealthAI", "score": 10280000, "trend": "down" },
+    { "rank": 4, "name": "AgroTech Pro", "score": 10100000, "trend": "up" },
+    { "rank": 5, "name": "EduLearn", "score": 10050000, "trend": "same" },
+    { "rank": 6, "name": "SpaceLogistics", "score": 9900000, "trend": "up" },
+    { "rank": 7, "name": "CyberShield", "score": 9850000, "trend": "down" },
+    { "rank": 8, "name": "BioGen", "score": 9700000, "trend": "same" },
+    { "rank": 9, "name": "RoboAssist", "score": 9650000, "trend": "up" },
+    { "rank": 10, "name": "CleanEnergy", "score": 9500000, "trend": "down" },
+    { "rank": 11, "name": "SmartHome", "score": 9450000, "trend": "same" },
+    { "rank": 12, "name": "VirtualRealityX", "score": 9300000, "trend": "up" },
+    { "rank": 13, "name": "BlockchainPay", "score": 9250000, "trend": "down" },
+    { "rank": 14, "name": "AutoDrive", "score": 9100000, "trend": "same" },
+    { "rank": 15, "name": "FoodDelivery20", "score": 9050000, "trend": "up" },
+    { "rank": 16, "name": "TravelBuddy", "score": 8900000, "trend": "down" },
+    { "rank": 17, "name": "MusicStream", "score": 8850000, "trend": "same" },
+    { "rank": 18, "name": "GameZone", "score": 8700000, "trend": "up" },
+    { "rank": 19, "name": "FashionHub", "score": 8650000, "trend": "down" },
+    { "rank": 20, "name": "PetCare", "score": 8500000, "trend": "same" },
+    { "rank": 21, "name": "HomeDecor", "score": 8450000, "trend": "up" },
+    { "rank": 22, "name": "SportsLive", "score": 8300000, "trend": "down" },
+    { "rank": 23, "name": "NewsFlash", "score": 8250000, "trend": "same" },
+    { "rank": 24, "name": "WeatherWatch", "score": 8100000, "trend": "up" },
+    { "rank": 25, "name": "JobFinder", "score": 8050000, "trend": "down" },
+    { "rank": 26, "name": "SocialConnect", "score": 7900000, "trend": "same" },
+    { "rank": 27, "name": "VideoShare", "score": 7750000, "trend": "up" },
+    { "rank": 28, "name": "BookClub", "score": 7600000, "trend": "down" },
+    { "rank": 29, "name": "MovieNight", "score": 7450000, "trend": "same" },
+    { "rank": 30, "name": "ArtGallery", "score": 7300000, "trend": "up" }
+  ]
+}
